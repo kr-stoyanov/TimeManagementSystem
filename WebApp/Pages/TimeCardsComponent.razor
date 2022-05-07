@@ -1,0 +1,43 @@
+﻿@page "/timecards"
+@inject UseCases.UserCaseInterfaces.IViewTimeCardsUseCase ViewTimeCardsUseCase
+<h3>Manage TimeCards</h3>
+
+
+@if(timeCards != null)
+{
+   <table class="table">
+       <thead>
+           <tr>
+               <th>UserName</th>
+               <th>Project</th>
+               <th>Task</th>
+               <th>Notes</th>
+               <th>Time Spent</th>
+           </tr>
+       </thead>
+       <tbody>
+
+    @foreach (var card in timeCards)
+    {
+        <tr>
+            <td>@card.UserName</td>
+            <td>@card.ProjectName</td>
+            <td>@card.TaskName</td>
+            <td>@card.Notes</td>
+            <td>@card.TimeSpent</td>
+        </tr>
+    }
+       </tbody>
+   </table>
+}
+
+@code {
+    private List<TimeCard> timeCards;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        timeCards = ViewTimeCardsUseCase.Execute().ToList();
+    }
+}
