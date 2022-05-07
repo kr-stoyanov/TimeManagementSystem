@@ -10,6 +10,6 @@
 
         public string? Notes { get; set; }
 
-        public TimeSpan TimeSpent { get; set; }
+        public TimeSpan? TimeSpent { get; set; }
     }
 }

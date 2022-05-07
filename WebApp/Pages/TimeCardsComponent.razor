@@ -1,6 +1,6 @@
 ﻿@page "/timecards"
 @inject UseCases.UserCaseInterfaces.IViewTimeCardsUseCase ViewTimeCardsUseCase
-<h3>Manage TimeCards</h3>
+<h3>Manage Time Cards</h3>
 
 
 @if(timeCards != null)
@@ -32,7 +32,7 @@
 }
 
 @code {
-    private List<TimeCard> timeCards;
+    private List<TimeCard>? timeCards;
 
     protected override void OnInitialized()
     {
