@@ -14,6 +14,7 @@ builder.Services.AddScoped<ITimeCardRepository, TimeCardInMemoryRepository>();
 
 //Dependency Injection for UseCases and Repositories
 builder.Services.AddTransient<IViewTimeCardsUseCase, ViewTimeCardsUseCase>();
+builder.Services.AddTransient<IAddTimeCardUseCase, AddTimeCardUseCase>();
 
 var app = builder.Build();
 

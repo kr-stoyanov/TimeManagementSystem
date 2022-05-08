@@ -1,5 +1,8 @@
 ﻿@page "/timecards"
-@inject UseCases.UserCaseInterfaces.IViewTimeCardsUseCase ViewTimeCardsUseCase
+
+@inject NavigationManager NavigationManager
+@inject IViewTimeCardsUseCase ViewTimeCardsUseCase
+
 <h3>Manage Time Cards</h3>
 
 
@@ -8,11 +11,11 @@
    <table class="table">
        <thead>
            <tr>
-               <th>UserName</th>
+               <th>Username</th>
                <th>Project</th>
                <th>Task</th>
                <th>Notes</th>
-               <th>Time Spent</th>
+               <th>Time Spent (Hours)</th>
            </tr>
        </thead>
        <tbody>
@@ -30,6 +33,9 @@
        </tbody>
    </table>
 }
+<br/>
+<button class="btn btn-primary" @onclick="OnClickAddTimeCard">Add Time Card</button>
+
 
 @code {
     private List<TimeCard>? timeCards;
@@ -38,6 +44,11 @@
     {
         base.OnInitialized();
 
-        timeCards = ViewTimeCardsUseCase.Execute().ToList();
+        timeCards = ViewTimeCardsUseCase.Execute()?.ToList();
+    }
+
+    private void OnClickAddTimeCard()
+    {
+        NavigationManager.NavigateTo("/addtimecard");
     }
 }

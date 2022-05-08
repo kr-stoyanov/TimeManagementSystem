@@ -4,6 +4,7 @@ namespace UseCases.DataStorePluginInterfaces
 {
     public interface ITimeCardRepository
     {
-        public IEnumerable<TimeCard> GetTimeCards();
+        IEnumerable<TimeCard> GetTimeCards();
+        void AddTimeCard(TimeCard timeCard);
     }
 }

@@ -1,0 +1,62 @@
+﻿@page "/addtimecard"
+
+@inject NavigationManager NavigationManager
+@inject IAddTimeCardUseCase AddTimeCardUseCase
+
+<h3>Add TimeCard</h3>
+
+@if (timeCard != null)
+{
+    <EditForm Model="timeCard" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <InputText id="username" @bind-Value="timeCard.UserName" class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label for="project">Project</label>
+            <InputText id="project" @bind-Value="timeCard.ProjectName" class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label for="task">Task</label>
+            <InputText id="task" @bind-Value="timeCard.TaskName" class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label for="notes">Notes</label>
+            <InputText id="notes" @bind-Value="timeCard.Notes" class="form-control"></InputText>
+        </div>
+         <div class="form-group">
+            <label for="timespent">Time Spent</label>
+            <InputText id="timespent" @bind-Value="TimeProxy" class="form-control"></InputText>
+        </div>
+        <hr/>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </EditForm>
+}
+
+
+@code{
+
+    private TimeCard? timeCard;
+    private string TimeProxy { 
+        get => timeCard?.TimeSpent.ToString();
+        set => timeCard.TimeSpent.ToString();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        timeCard = new TimeCard();
+    }
+
+    private void OnValidSubmit()
+    {
+        AddTimeCardUseCase.Execute(timeCard);
+        NavigationManager.NavigateTo("timecards");
+    }
+
+}
