@@ -1,6 +1,6 @@
 ﻿using CoreBusiness;
 using UseCases.DataStorePluginInterfaces;
-using UseCases.UserCaseInterfaces;
+using UseCases.UseCaseInterfaces;
 
 namespace UseCases
 {

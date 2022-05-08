@@ -1,7 +1,7 @@
 using Plugins.DataStore.InMemory;
 using UseCases;
 using UseCases.DataStorePluginInterfaces;
-using UseCases.UserCaseInterfaces;
+using UseCases.UseCaseInterfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

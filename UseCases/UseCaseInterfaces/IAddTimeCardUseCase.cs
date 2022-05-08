@@ -1,6 +1,6 @@
 ﻿using CoreBusiness;
 
-namespace UseCases.UserCaseInterfaces
+namespace UseCases.UseCaseInterfaces
 {
     public interface IAddTimeCardUseCase
     {
