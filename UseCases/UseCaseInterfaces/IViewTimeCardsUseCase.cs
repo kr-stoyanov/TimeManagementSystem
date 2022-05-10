@@ -4,6 +4,6 @@ namespace UseCases.UseCaseInterfaces
 {
     public  interface IViewTimeCardsUseCase
     {
-        public IEnumerable<TimeCard> Execute();
+        IEnumerable<TimeCard> Execute();
     }
 }

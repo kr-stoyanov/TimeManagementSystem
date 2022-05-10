@@ -1,9 +1,11 @@
-﻿@page "/addtimecard"
+﻿@page "/edittimecard/{id}"
 
 @inject NavigationManager NavigationManager
-@inject IAddTimeCardUseCase AddTimeCardUseCase
+@inject IEditTimeCardUseCase EditTimeCardUseCase
+@inject IGetTimeCardById GetTimeCardById
 
-<h3>Add TimeCard</h3>
+
+<h3>Edit TimeCard</h3>
 
 @if (timeCard != null)
 {
@@ -33,7 +35,7 @@
         <hr/>
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Save</button>
-              <button type="button" class="btn btn-light" @onclick="OnCancel">Cancel</button>
+            <button type="button" class="btn btn-light" @onclick="OnCancel">Cancel</button>
         </div>
     </EditForm>
 }
@@ -41,29 +43,37 @@
 
 @code{
 
-    private TimeCard? timeCard;
+    [Parameter]
+    public string? Id { get; set; }
 
+    private TimeCard? timeCard;
     private string TimeProxy { 
-        get => this.timeCard?.TimeSpent?.ToString();
-        set => this.timeCard?.TimeSpent.ToString();
+        get => timeCard?.TimeSpent.ToString();
+        set => timeCard.TimeSpent.ToString();
     }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        this.timeCard = new TimeCard();
+        timeCard = new TimeCard();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if(int.TryParse(this.Id, out int iId)) this.timeCard = GetTimeCardById.Execute(iId);
     }
 
     private void OnValidSubmit()
     {
-        AddTimeCardUseCase.Execute(this.timeCard);
+        EditTimeCardUseCase.Execute(this.timeCard);
         NavigationManager.NavigateTo("/timecards");
     }
 
     private void OnCancel()
     {
-        NavigationManager.NavigateTo("/timecards"); 
+        NavigationManager.NavigateTo("/timecards");
     }
 
 }

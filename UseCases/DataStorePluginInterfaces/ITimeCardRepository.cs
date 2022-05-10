@@ -6,5 +6,7 @@ namespace UseCases.DataStorePluginInterfaces
     {
         IEnumerable<TimeCard> GetTimeCards();
         void AddTimeCard(TimeCard timeCard);
+        void EditTimeCard(TimeCard timeCard);
+        TimeCard GetTimeCardById(int id);
     }
 }

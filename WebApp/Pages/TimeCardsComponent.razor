@@ -3,8 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject IViewTimeCardsUseCase ViewTimeCardsUseCase
 
-<h3>Manage Time Cards</h3>
-
+<h3>View Time Cards</h3>
 
 @if(timeCards != null)
 {
@@ -16,6 +15,7 @@
                <th>Task</th>
                <th>Notes</th>
                <th>Time Spent (Hours)</th>
+               <th>Action</th>
            </tr>
        </thead>
        <tbody>
@@ -28,6 +28,7 @@
             <td>@card.TaskName</td>
             <td>@card.Notes</td>
             <td>@card.TimeSpent</td>
+            <td><button type="button" @onclick="@(() => EditTimeCard(card))" class="btn btn-primary">Edit</button></td>
         </tr>
     }
        </tbody>
@@ -50,5 +51,9 @@
     private void OnClickAddTimeCard()
     {
         NavigationManager.NavigateTo("/addtimecard");
+    }
+    private void EditTimeCard(TimeCard timeCard)
+    {
+        NavigationManager.NavigateTo($"/edittimecard/{timeCard.Id}");
     }
 }

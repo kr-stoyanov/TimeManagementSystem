@@ -4,7 +4,7 @@ namespace CoreBusiness
 {
     public class TimeCard
     {
-        public int TimeCardId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string? UserName { get; set; }
@@ -16,5 +16,7 @@ namespace CoreBusiness
         public string? Notes { get; set; }
 
         public int? TimeSpent { get; set; }
+
+        
     }
 }
