@@ -3,7 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject IAddTimeCardUseCase AddTimeCardUseCase
 
-<h3>Add TimeCard</h3>
+<h3>Add Time Card</h3>
 
 @if (timeCard != null)
 {
@@ -26,10 +26,6 @@
             <label for="notes">Notes</label>
             <InputText id="notes" @bind-Value="timeCard.Notes" class="form-control"></InputText>
         </div>
-         <div class="form-group">
-            <label for="timespent">Time Spent</label>
-            <InputText id="timespent" @bind-Value="TimeProxy" class="form-control"></InputText>
-        </div>
         <hr/>
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Save</button>
@@ -42,11 +38,6 @@
 @code{
 
     private TimeCard? timeCard;
-
-    private string TimeProxy { 
-        get => this.timeCard?.TimeSpent?.ToString();
-        set => this.timeCard?.TimeSpent.ToString();
-    }
 
     protected override void OnInitialized()
     {

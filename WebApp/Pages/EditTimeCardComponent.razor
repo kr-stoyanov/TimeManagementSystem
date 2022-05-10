@@ -5,7 +5,7 @@
 @inject IGetTimeCardById GetTimeCardById
 
 
-<h3>Edit TimeCard</h3>
+<h3>Edit Time Card</h3>
 
 @if (timeCard != null)
 {
@@ -27,10 +27,6 @@
         <div class="form-group">
             <label for="notes">Notes</label>
             <InputText id="notes" @bind-Value="timeCard.Notes" class="form-control"></InputText>
-        </div>
-         <div class="form-group">
-            <label for="timespent">Time Spent</label>
-            <InputText id="timespent" @bind-Value="TimeProxy" class="form-control"></InputText>
         </div>
         <hr/>
         <div class="form-group">

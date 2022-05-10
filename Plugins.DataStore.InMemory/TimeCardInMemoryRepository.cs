@@ -11,8 +11,8 @@ namespace Plugins.DataStore.InMemory
         {
             timeCards = new List<TimeCard>()
             {
-                new TimeCard(){ Id = 1, UserName = "kstoyanov@mail.com", ProjectName = "Sundowning", TaskName = "Process Manual Documents in Databricks", Notes = "Add new notebook in Databricks - use python", TimeSpent = 8 },
-                new TimeCard(){ Id = 2, UserName = "kstoyanov@mail.com", ProjectName = "Sundowning", TaskName = "Process GSA fles", Notes = "Extract attachments and upload them to azure blob storage - use dotnet", TimeSpent = 48 },
+                new TimeCard(){ Id = 1, UserName = "kstoyanov@mail.com", ProjectName = "Sundowning", TaskName = "Process Manual Documents in Databricks", Notes = "Add new notebook in Databricks - use python" },
+                new TimeCard(){ Id = 2, UserName = "kstoyanov@mail.com", ProjectName = "Sundowning", TaskName = "Process GSA fles", Notes = "Extract attachments and upload them to azure blob storage - use dotnet" },
             };
         }
 

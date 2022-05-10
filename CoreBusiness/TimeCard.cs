@@ -15,8 +15,11 @@ namespace CoreBusiness
 
         public string? Notes { get; set; }
 
-        public int? TimeSpent { get; set; }
+        public TimeSpan TimeSpent { get; set; }
 
-        
+        public bool IsRunning { get; set; }
+
+        public TimeSpan StopwatchValue { get; set; }
+
     }
 }

@@ -2,39 +2,47 @@
 
 @inject NavigationManager NavigationManager
 @inject IViewTimeCardsUseCase ViewTimeCardsUseCase
+@inject IGetTimeCardById GetTimeCardById
+
 
 <h3>View Time Cards</h3>
 
-@if(timeCards != null)
+@if (timeCards != null)
 {
-   <table class="table">
-       <thead>
-           <tr>
-               <th>Username</th>
-               <th>Project</th>
-               <th>Task</th>
-               <th>Notes</th>
-               <th>Time Spent (Hours)</th>
-               <th>Action</th>
-           </tr>
-       </thead>
-       <tbody>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Project</th>
+                <th>Task</th>
+                <th>Notes</th>
+                <th>Time Spent</th>
+                <th>Action</th>
+                <th colspan=6>Timer</th>
+            </tr>
+        </thead>
+        <tbody>
 
-    @foreach (var card in timeCards)
-    {
-        <tr>
-            <td>@card.UserName</td>
-            <td>@card.ProjectName</td>
-            <td>@card.TaskName</td>
-            <td>@card.Notes</td>
-            <td>@card.TimeSpent</td>
-            <td><button type="button" @onclick="@(() => EditTimeCard(card))" class="btn btn-primary">Edit</button></td>
-        </tr>
-    }
-       </tbody>
-   </table>
+            @foreach (var card in timeCards)
+            {
+                <tr>
+                    <td>@card.UserName</td>
+                    <td>@card.ProjectName</td>
+                    <td>@card.TaskName</td>
+                    <td>@card.Notes</td>
+                    <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min</td>
+                    <td><button type="button" @onclick="@(() => EditTimeCard(card))" class="btn btn-primary">Edit</button></td>
+                    <td><button type="button" @onclick="@(async () =>  { await StopWatch(card.Id); })" class="btn btn-success">Start</button></td>
+                    <td><button type="button" @onclick="@(() => { card.IsRunning = false; })" class="btn btn-light">Pause</button></td>
+                    <td><button type="button" @onclick="@(async () =>  { await StopWatch(card.Id); })" class="btn btn-light">Resume</button></td>
+                    <td><button type="button" @onclick="@(() => { card.IsRunning = false; UpdateTimeCard(card); card.StopwatchValue = new TimeSpan(); })" class="btn btn-danger">Reset</button></td>
+                    <td><div>@card.StopwatchValue</div></td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
-<br/>
+<br />
 <button class="btn btn-primary" @onclick="OnClickAddTimeCard">Add Time Card</button>
 
 
@@ -56,4 +64,27 @@
     {
         NavigationManager.NavigateTo($"/edittimecard/{timeCard.Id}");
     }
+
+    private async Task StopWatch(int id)
+    {
+        var timeCard = GetTimeCardById.Execute(id);
+
+        timeCard.IsRunning = true;
+        while (timeCard.IsRunning)
+        {
+            await Task.Delay(1000);
+            if (timeCard.IsRunning)
+            {
+                timeCard.StopwatchValue = timeCard.StopwatchValue.Add(new TimeSpan(0, 0, 1));
+                StateHasChanged();
+            }
+        }
+    }
+
+    private void UpdateTimeCard(TimeCard timeCard)
+    {
+        timeCard.TimeSpent = timeCard.StopwatchValue;
+        StateHasChanged();
+    }
+
 }
