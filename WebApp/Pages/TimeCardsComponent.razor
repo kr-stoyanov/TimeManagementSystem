@@ -31,11 +31,11 @@
                     <td>@card.TaskName</td>
                     <td>@card.Notes</td>
                     <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min</td>
-                    <td><button type="button" @onclick="@(() => EditTimeCard(card))" class="btn btn-primary oi oi-pencil"></button></td>
-                    <td><button type="button" @onclick="@(async () =>  { await StopWatch(card.Id); })" class="btn btn-success oi oi-media-play"></button></td>
-                    <td><button type="button" @onclick="@(() => { card.IsRunning = false; })" class="btn btn-light oi oi-media-pause"></button></td>
-                    <td><button type="button" @onclick="@(async () =>  { await StopWatch(card.Id); })" class="btn btn-light oi oi-media-step-forward"></button></td>
-                    <td><button type="button" @onclick="@(() => { card.IsRunning = false; UpdateTimeCard(card); card.StopwatchValue = new TimeSpan(); })" class="btn btn-danger oi oi-reload"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Edit" @onclick="@(() => EditTimeCard(card))" class="btn btn-primary oi oi-pencil"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Start" @onclick="@(async () =>  { await StopWatch(card.Id); })" class="btn btn-success oi oi-media-play"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Pause" @onclick="@(() => { card.IsRunning = false; })" class="btn btn-light oi oi-media-pause"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Resume" @onclick="@(async () =>  { await StopWatch(card.Id); })" class="btn btn-light oi oi-media-step-forward"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Stop" @onclick="@(() => { card.IsRunning = false; UpdateTimeCard(card); card.StopwatchValue = new TimeSpan(); })" class="btn btn-danger oi oi-reload"></button></td>
                     <td><div>@card.StopwatchValue</div></td>
                 </tr>
             }
