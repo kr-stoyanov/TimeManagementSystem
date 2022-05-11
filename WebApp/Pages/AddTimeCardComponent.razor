@@ -2,6 +2,7 @@
 
 @inject NavigationManager NavigationManager
 @inject IAddTimeCardUseCase AddTimeCardUseCase
+@inject IEnumHelperUseCase EnumHelperUseCase
 
 <h3>Add Time Card</h3>
 
@@ -26,16 +27,25 @@
             <label for="notes">Notes</label>
             <InputText id="notes" @bind-Value="timeCard.Notes" class="form-control"></InputText>
         </div>
-        <hr/>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Save</button>
-              <button type="button" class="btn btn-light" @onclick="OnCancel">Cancel</button>
-        </div>
-    </EditForm>
+            <label for="status">Status</label>
+            <InputSelect id="status" @bind-Value="timeCard.Status" class="form-control">
+                @foreach (var status in Enum.GetValues(typeof(TimeCardStatus)))
+                {
+                    <option value="@status">@EnumHelperUseCase.GetStatusDisplayName((TimeCardStatus)status)</option>
+                }
+        </InputSelect>
+    </div>
+    <hr />
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-light" @onclick="OnCancel">Cancel</button>
+    </div>
+</EditForm>
 }
 
 
-@code{
+@code {
 
     private TimeCard? timeCard;
 
@@ -54,7 +64,6 @@
 
     private void OnCancel()
     {
-        NavigationManager.NavigateTo("/timecards"); 
+        NavigationManager.NavigateTo("/timecards");
     }
-
 }

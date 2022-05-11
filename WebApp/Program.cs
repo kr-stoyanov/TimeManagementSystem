@@ -17,6 +17,7 @@ builder.Services.AddTransient<IViewTimeCardsUseCase, ViewTimeCardsUseCase>();
 builder.Services.AddTransient<IAddTimeCardUseCase, AddTimeCardUseCase>();
 builder.Services.AddTransient<IEditTimeCardUseCase, EditTimeCardUseCase>();
 builder.Services.AddTransient<IGetTimeCardById, GetTimeCardById>();
+builder.Services.AddTransient<IEnumHelperUseCase, EnumHelperUseCase>();
 
 var app = builder.Build();
 

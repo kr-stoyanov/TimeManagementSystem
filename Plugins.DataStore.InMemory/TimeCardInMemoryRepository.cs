@@ -1,4 +1,5 @@
 ﻿using CoreBusiness;
+using CoreBusiness.Enums;
 using UseCases.DataStorePluginInterfaces;
 
 namespace Plugins.DataStore.InMemory
@@ -11,8 +12,8 @@ namespace Plugins.DataStore.InMemory
         {
             timeCards = new List<TimeCard>()
             {
-                new TimeCard(){ Id = 1, UserName = "kstoyanov@mail.com", ProjectName = "Sundowning", TaskName = "Process Manual Documents in Databricks", Notes = "Add new notebook in Databricks - use python" },
-                new TimeCard(){ Id = 2, UserName = "kstoyanov@mail.com", ProjectName = "Sundowning", TaskName = "Process GSA fles", Notes = "Extract attachments and upload them to azure blob storage - use dotnet" },
+                new TimeCard(){ Id = 1, UserName = "kstoyanov@mail.com", ProjectName = "Sundowning", TaskName = "Process Manual Documents in Databricks", Notes = "Add new notebook in Databricks - use python", Status = TimeCardStatus.New },
+                new TimeCard(){ Id = 2, UserName = "kstoyanov@mail.com", ProjectName = "Sundowning", TaskName = "Process GSA fles", Notes = "Extract attachments and upload them to azure blob storage - use dotnet", Status = TimeCardStatus.New},
             };
         }
 

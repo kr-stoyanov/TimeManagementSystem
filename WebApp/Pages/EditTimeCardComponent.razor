@@ -3,7 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject IEditTimeCardUseCase EditTimeCardUseCase
 @inject IGetTimeCardById GetTimeCardById
-
+@inject IEnumHelperUseCase EnumHelperUseCase
 
 <h3>Edit Time Card</h3>
 
@@ -27,6 +27,15 @@
         <div class="form-group">
             <label for="notes">Notes</label>
             <InputText id="notes" @bind-Value="timeCard.Notes" class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <InputSelect id="status" @bind-Value="timeCard.Status" class="form-control">
+                @foreach(var status in Enum.GetValues(typeof(TimeCardStatus)))
+                {
+                    <option value="@status">@EnumHelperUseCase.GetStatusDisplayName((TimeCardStatus)status)</option>
+                }
+        </InputSelect>
         </div>
         <hr/>
         <div class="form-group">
@@ -71,5 +80,4 @@
     {
         NavigationManager.NavigateTo("/timecards");
     }
-
 }
