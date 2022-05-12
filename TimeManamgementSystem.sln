@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreBusiness", "CoreBusines
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.DataStore.InMemory", "Plugins.DataStore.InMemory\Plugins.DataStore.InMemory.csproj", "{73CFF843-476A-44B2-A364-DC1062F11C21}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CFE3818D-31F1-4290-8884-93E4065F0BDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B6A41E0B-CF67-46CE-8103-6A67BB75AB15} = {CFE3818D-31F1-4290-8884-93E4065F0BDF}
+		{28C1BC11-EA12-4A8F-A438-54F89612C8AA} = {CFE3818D-31F1-4290-8884-93E4065F0BDF}
+		{F70D435B-ECA4-41B9-98B9-528F4FF3916F} = {CFE3818D-31F1-4290-8884-93E4065F0BDF}
+		{73CFF843-476A-44B2-A364-DC1062F11C21} = {CFE3818D-31F1-4290-8884-93E4065F0BDF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B1A9B404-0E84-41B5-9ADB-81B1ED10E5D4}
