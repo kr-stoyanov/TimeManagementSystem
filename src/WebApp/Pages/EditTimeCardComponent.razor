@@ -2,7 +2,7 @@
 
 @inject NavigationManager NavigationManager
 @inject IEditTimeCardUseCase EditTimeCardUseCase
-@inject IGetTimeCardById GetTimeCardById
+@inject IGetTimeCardByIdUseCase GetTimeCardById
 @inject IEnumHelperUseCase EnumHelperUseCase
 
 <h3>Edit Time Card</h3>
@@ -67,7 +67,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if(int.TryParse(this.Id, out int iId)) this.timeCard = GetTimeCardById.Execute(iId);
+        this.timeCard = GetTimeCardById.Execute(this.Id);
     }
 
     private void OnValidSubmit()

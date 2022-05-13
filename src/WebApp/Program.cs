@@ -1,4 +1,8 @@
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Plugins.DataStore.InMemory;
+using Plugins.DataStore.MongoDb;
+using Plugins.DataStore.MongoDb.Models;
 using UseCases;
 using UseCases.DataStorePluginInterfaces;
 using UseCases.UseCaseInterfaces;
@@ -10,13 +14,26 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 //Dependency Injection for In-Memory Data Store
-builder.Services.AddScoped<ITimeCardRepository, TimeCardInMemoryRepository>();
+//builder.Services.AddScoped<ITimeCardInMemoryRepository, TimeCardInMemoryRepository>();
+
+//Dependency Injection for MongoDb DataStore
+builder.Services.AddSingleton<IDatabaseSettings, DatabaseSettings>();
+builder.Services.AddSingleton<ITimeCardMongoDbRepository, TimeCardMongoDbRepository>();
+
+//Database configuration settings - MongoDb
+builder.Services.Configure<DatabaseSettings>(
+                builder.Configuration.GetSection(nameof(DatabaseSettings)));
+
+builder.Services.AddSingleton<IDatabaseSettings>(x => x.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+
+builder.Services.AddSingleton<IMongoClient>(s =>
+        new MongoClient(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString")));
 
 //Dependency Injection for UseCases and Repositories
 builder.Services.AddTransient<IViewTimeCardsUseCase, ViewTimeCardsUseCase>();
 builder.Services.AddTransient<IAddTimeCardUseCase, AddTimeCardUseCase>();
 builder.Services.AddTransient<IEditTimeCardUseCase, EditTimeCardUseCase>();
-builder.Services.AddTransient<IGetTimeCardById, GetTimeCardById>();
+builder.Services.AddTransient<IGetTimeCardByIdUseCase, GetTimeCardByIdUseCase>();
 builder.Services.AddTransient<IEnumHelperUseCase, EnumHelperUseCase>();
 
 var app = builder.Build();

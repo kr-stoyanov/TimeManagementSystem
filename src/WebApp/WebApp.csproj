@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Plugins.DataStore.InMemory\Plugins.DataStore.InMemory.csproj" />
+    <ProjectReference Include="..\Plugins.DataStore.MongoDb\Plugins.DataStore.MongoDb.csproj" />
     <ProjectReference Include="..\UseCases\UseCases.csproj" />
   </ItemGroup>
 

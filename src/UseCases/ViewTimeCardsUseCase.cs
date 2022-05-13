@@ -6,15 +6,15 @@ namespace UseCases
 {
     public class ViewTimeCardsUseCase : IViewTimeCardsUseCase
     {
-        private readonly ITimeCardRepository timeCardRepository;
+        private readonly ITimeCardMongoDbRepository timeCardRepository;
 
-        public ViewTimeCardsUseCase(ITimeCardRepository timeCardRepository)
+        public ViewTimeCardsUseCase(ITimeCardMongoDbRepository timeCardRepository)
         {
             this.timeCardRepository = timeCardRepository;
         } 
         public IEnumerable<TimeCard> Execute()
         {
-            return timeCardRepository.GetTimeCards();
+            return timeCardRepository.Read();
         }
     }
 }

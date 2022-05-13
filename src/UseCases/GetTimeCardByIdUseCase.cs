@@ -4,18 +4,17 @@ using UseCases.UseCaseInterfaces;
 
 namespace UseCases
 {
-    public class AddTimeCardUseCase : IAddTimeCardUseCase
+    public class GetTimeCardByIdUseCase : IGetTimeCardByIdUseCase
     {
         private readonly ITimeCardMongoDbRepository timeCardRepository;
 
-        public AddTimeCardUseCase(ITimeCardMongoDbRepository timeCardRepository)
+        public GetTimeCardByIdUseCase(ITimeCardMongoDbRepository timeCardRepository)
         {
             this.timeCardRepository = timeCardRepository;
         }
-
-        public void Execute(TimeCard timeCard)
+        public TimeCard Execute(string id)
         {
-            timeCardRepository.Create(timeCard);
+            return this.timeCardRepository.Find(id);
         }
     }
 }

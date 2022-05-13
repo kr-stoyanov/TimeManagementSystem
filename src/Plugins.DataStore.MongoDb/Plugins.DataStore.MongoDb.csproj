@@ -8,6 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="MongoDB.Bson" Version="2.15.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoreBusiness\CoreBusiness.csproj" />
+    <ProjectReference Include="..\UseCases\UseCases.csproj" />
   </ItemGroup>
 
 </Project>

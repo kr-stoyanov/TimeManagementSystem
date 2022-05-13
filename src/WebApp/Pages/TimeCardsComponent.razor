@@ -2,7 +2,7 @@
 
 @inject NavigationManager NavigationManager
 @inject IViewTimeCardsUseCase ViewTimeCardsUseCase
-@inject IGetTimeCardById GetTimeCardById
+@inject IGetTimeCardByIdUseCase GetTimeCardById
 @inject IEditTimeCardUseCase EditTimeCardUseCase
 @inject IEnumHelperUseCase EnumHelperUseCase
 
@@ -24,7 +24,6 @@
             </tr>
         </thead>
         <tbody>
-
             @foreach (var card in timeCards)
             {
                 <tr>
@@ -33,11 +32,11 @@
                     <td>@card.TaskName</td>
                     <td>@card.Notes</td>
                     <td>@EnumHelperUseCase.GetStatusDisplayName(card.Status)</td>
-                    <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min</td>
+                    <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min : @card.TimeSpent.Seconds sec</td>
                     <td><button type="button" data-toggle="tooltip" title="Edit" @onclick="@(() => EditTimeCard(card))" class="btn btn-primary oi oi-pencil"></button></td>
-                    <td><button type="button" data-toggle="tooltip" title="Start" @onclick="@(async () =>  { ChangeStatus(card, "InProgress"); await StopWatch(card.Id); })" class="btn btn-success oi oi-media-play"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Start" @onclick="@(async () =>  { ChangeStatus(card, "InProgress"); await StopWatch(card); })" class="btn btn-success oi oi-media-play"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Pause" @onclick="@(() => { card.IsRunning = false; })" class="btn btn-light oi oi-media-pause"></button></td>
-                    <td><button type="button" data-toggle="tooltip" title="Resume" @onclick="@(async () =>  { await StopWatch(card.Id); })" class="btn btn-light oi oi-media-step-forward"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Resume" @onclick="@(async () =>  { await StopWatch(card); })" class="btn btn-light oi oi-media-step-forward"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Stop" @onclick="@(() => { card.IsRunning = false; ChangeStatus(card, "Done"); UpdateTimeCard(card); card.StopwatchValue = new TimeSpan(); })" class="btn btn-danger oi oi-media-stop"></button></td>
                     <td><div>@card.StopwatchValue</div></td>
                 </tr>
@@ -57,8 +56,9 @@
         base.OnInitialized();
 
         timeCards = ViewTimeCardsUseCase.Execute()?.ToList();
+        foreach (var card in timeCards) card.StopwatchValue = new TimeSpan();
         StateHasChanged();
-        
+
     }
 
     private void OnClickAddTimeCard()
@@ -71,10 +71,8 @@
         NavigationManager.NavigateTo($"/edittimecard/{timeCard.Id}");
     }
 
-    private async Task StopWatch(int id)
+    private async Task StopWatch(TimeCard timeCard)
     {
-        var timeCard = GetTimeCardById.Execute(id);
-
         timeCard.IsRunning = true;
         while (timeCard.IsRunning)
         {
@@ -90,6 +88,7 @@
     private void UpdateTimeCard(TimeCard timeCard)
     {
         timeCard.TimeSpent += timeCard.StopwatchValue;
+        EditTimeCardUseCase.Execute(timeCard);
         StateHasChanged();
     }
 

@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.DataStore.InMemory"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CFE3818D-31F1-4290-8884-93E4065F0BDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins.DataStore.MongoDb", "Plugins.DataStore.MongoDb\Plugins.DataStore.MongoDb.csproj", "{EF8BCE58-8690-46E9-96D7-34C97C5FB0C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{73CFF843-476A-44B2-A364-DC1062F11C21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73CFF843-476A-44B2-A364-DC1062F11C21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73CFF843-476A-44B2-A364-DC1062F11C21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF8BCE58-8690-46E9-96D7-34C97C5FB0C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF8BCE58-8690-46E9-96D7-34C97C5FB0C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF8BCE58-8690-46E9-96D7-34C97C5FB0C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF8BCE58-8690-46E9-96D7-34C97C5FB0C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{28C1BC11-EA12-4A8F-A438-54F89612C8AA} = {CFE3818D-31F1-4290-8884-93E4065F0BDF}
 		{F70D435B-ECA4-41B9-98B9-528F4FF3916F} = {CFE3818D-31F1-4290-8884-93E4065F0BDF}
 		{73CFF843-476A-44B2-A364-DC1062F11C21} = {CFE3818D-31F1-4290-8884-93E4065F0BDF}
+		{EF8BCE58-8690-46E9-96D7-34C97C5FB0C9} = {CFE3818D-31F1-4290-8884-93E4065F0BDF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B1A9B404-0E84-41B5-9ADB-81B1ED10E5D4}
