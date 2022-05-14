@@ -1,0 +1,64 @@
+﻿@page "/history"
+
+@inject NavigationManager NavigationManager
+@inject IEnumHelperUseCase EnumHelperUseCase
+@inject IEditTimeCardUseCase EditTimeCardUseCase
+@inject ITimeCardHistoryUseCase TimeCardHistoryUseCase
+
+<h3>History</h3>
+
+@if (timeCards != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Project</th>
+                <th>Task</th>
+                <th>Notes</th>
+                <th>Status</th>
+                <th>Time Spent</th>
+                <th>Created On</th>
+                <th>Closed On</th>
+                <th>Reopen</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var card in timeCards)
+            {
+                <tr>
+                    <td>@card.UserName</td>
+                    <td>@card.ProjectName</td>
+                    <td>@card.TaskName</td>
+                    <td>@card.Notes</td>
+                    <td>@EnumHelperUseCase.GetStatusDisplayName(card.Status)</td>
+                    <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min : @card.TimeSpent.Seconds sec</td>
+                    <td>@card.CreatedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
+                    <td>@card.ClosedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
+                    <th><button type="button" data-toggle="tooltip" title="Reopen" @onclick="@(() => Reopen(card))" class="btn btn-success oi oi-reload"></button></th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<TimeCard>? timeCards;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        timeCards = TimeCardHistoryUseCase.Execute()?.ToList();
+        StateHasChanged();
+    }
+
+    private void Reopen(TimeCard timeCard)
+    {
+        timeCard.Status = TimeCardStatus.New;
+        timeCard.LastModifiedOn = DateTime.Now;
+        EditTimeCardUseCase.Execute(timeCard);
+        StateHasChanged();
+        OnInitialized();
+    }
+}

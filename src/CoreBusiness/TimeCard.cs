@@ -26,6 +26,7 @@ namespace CoreBusiness
         [BsonElement("task")]
         public string? TaskName { get; set; }
 
+        [MaxLength(2500)]
         [BsonElement("notes")]
         public string? Notes { get; set; }
 
@@ -34,6 +35,15 @@ namespace CoreBusiness
 
         [BsonElement("timeSpent")]
         public TimeSpan TimeSpent { get; set; }
+
+        [BsonElement("createdOn")]
+        public DateTime CreatedOn { get; set; }
+
+        [BsonElement("lastModifiedOn")]
+        public DateTime LastModifiedOn { get; set; }
+
+        [BsonElement("closedOn")]
+        public DateTime ClosedOn { get; set; }
 
         [BsonElement("isRunning")]
         public bool IsRunning { get; set; }

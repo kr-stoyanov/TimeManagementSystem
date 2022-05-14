@@ -1,4 +1,5 @@
 ﻿using CoreBusiness;
+using CoreBusiness.Enums;
 using MongoDB.Driver;
 using Plugins.DataStore.MongoDb.Models;
 using UseCases.DataStorePluginInterfaces;
@@ -18,12 +19,14 @@ namespace Plugins.DataStore.MongoDb
 
         public TimeCard Create(TimeCard timeCard)
         {
+            timeCard.CreatedOn = DateTime.Now;
+            timeCard.LastModifiedOn = DateTime.Now;
             timeCards.InsertOne(timeCard);
             return timeCard;
         }
 
         public IEnumerable<TimeCard> Read() =>
-            timeCards.Find(x => true).ToList();
+            timeCards.Find(x => x.Status != TimeCardStatus.Closed).ToList();
 
         public TimeCard Find(string id) =>
             this.timeCards.Find(tc => tc.Id == id).SingleOrDefault();
@@ -31,5 +34,7 @@ namespace Plugins.DataStore.MongoDb
         public void Update(TimeCard timeCard) =>
             timeCards.ReplaceOne(tc => tc.Id == timeCard.Id, timeCard);
 
+        public IEnumerable<TimeCard> ReadClosed() =>
+            timeCards.Find(x => x.Status == TimeCardStatus.Closed).ToList();
     }
 }

@@ -72,6 +72,8 @@
 
     private void OnValidSubmit()
     {
+        this.timeCard.LastModifiedOn = DateTime.Now;
+        if (this.timeCard.Status == TimeCardStatus.Closed) this.timeCard.ClosedOn = DateTime.Now;
         EditTimeCardUseCase.Execute(this.timeCard);
         NavigationManager.NavigateTo("/timecards");
     }

@@ -11,5 +11,7 @@ namespace UseCases.DataStorePluginInterfaces
         TimeCard Find(string id);
 
         void Update(TimeCard timeCard);
+
+        IEnumerable<TimeCard> ReadClosed();
     }
 }

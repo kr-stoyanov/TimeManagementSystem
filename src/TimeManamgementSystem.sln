@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.DataStore.InMemory"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CFE3818D-31F1-4290-8884-93E4065F0BDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins.DataStore.MongoDb", "Plugins.DataStore.MongoDb\Plugins.DataStore.MongoDb.csproj", "{EF8BCE58-8690-46E9-96D7-34C97C5FB0C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugins.DataStore.MongoDb", "Plugins.DataStore.MongoDb\Plugins.DataStore.MongoDb.csproj", "{EF8BCE58-8690-46E9-96D7-34C97C5FB0C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

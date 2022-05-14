@@ -30,11 +30,12 @@ builder.Services.AddSingleton<IMongoClient>(s =>
         new MongoClient(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString")));
 
 //Dependency Injection for UseCases and Repositories
-builder.Services.AddTransient<IViewTimeCardsUseCase, ViewTimeCardsUseCase>();
+builder.Services.AddTransient<IEnumHelperUseCase, EnumHelperUseCase>();
 builder.Services.AddTransient<IAddTimeCardUseCase, AddTimeCardUseCase>();
 builder.Services.AddTransient<IEditTimeCardUseCase, EditTimeCardUseCase>();
+builder.Services.AddTransient<IViewTimeCardsUseCase, ViewTimeCardsUseCase>();
+builder.Services.AddTransient<ITimeCardHistoryUseCase, TimeCardHistoryUseCase>();
 builder.Services.AddTransient<IGetTimeCardByIdUseCase, GetTimeCardByIdUseCase>();
-builder.Services.AddTransient<IEnumHelperUseCase, EnumHelperUseCase>();
 
 var app = builder.Build();
 

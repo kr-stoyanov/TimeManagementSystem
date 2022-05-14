@@ -58,6 +58,8 @@
 
     private void OnValidSubmit()
     {
+        this.timeCard.CreatedOn = DateTime.Now;
+        this.timeCard.LastModifiedOn = DateTime.Now;
         AddTimeCardUseCase.Execute(this.timeCard);
         NavigationManager.NavigateTo("/timecards");
     }

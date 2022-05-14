@@ -19,7 +19,9 @@
                 <th>Notes</th>
                 <th>Status</th>
                 <th>Time Spent</th>
-                <th>Action</th>
+                <th>Created On</th>
+                <th>Last Modified On</th>
+                <th>Edit</th>
                 <th colspan=6>Timer</th>
             </tr>
         </thead>
@@ -33,8 +35,10 @@
                     <td>@card.Notes</td>
                     <td>@EnumHelperUseCase.GetStatusDisplayName(card.Status)</td>
                     <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min : @card.TimeSpent.Seconds sec</td>
-                    <td><button type="button" data-toggle="tooltip" title="Edit" @onclick="@(() => EditTimeCard(card))" class="btn btn-primary oi oi-pencil"></button></td>
-                    <td><button type="button" data-toggle="tooltip" title="Start" @onclick="@(async () =>  { ChangeStatus(card, "InProgress"); await StopWatch(card); })" class="btn btn-success oi oi-media-play"></button></td>
+                    <td>@card.CreatedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
+                    <td>@card.LastModifiedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
+                    <td><button type="button" data-toggle="tooltip" title="Edit" @onclick="@(() => EditTimeCard(card.Id))" class="btn btn-primary oi oi-pencil"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Start" @onclick="@(async () =>  { ChangeStatus(card, "InProgress");  UpdateTimeCard(card); await StopWatch(card); })" class="btn btn-success oi oi-media-play"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Pause" @onclick="@(() => { card.IsRunning = false; })" class="btn btn-light oi oi-media-pause"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Resume" @onclick="@(async () =>  { await StopWatch(card); })" class="btn btn-light oi oi-media-step-forward"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Stop" @onclick="@(() => { card.IsRunning = false; ChangeStatus(card, "Done"); UpdateTimeCard(card); card.StopwatchValue = new TimeSpan(); })" class="btn btn-danger oi oi-media-stop"></button></td>
@@ -56,9 +60,6 @@
         base.OnInitialized();
 
         timeCards = ViewTimeCardsUseCase.Execute()?.ToList();
-        foreach (var card in timeCards) card.StopwatchValue = new TimeSpan();
-        StateHasChanged();
-
     }
 
     private void OnClickAddTimeCard()
@@ -66,9 +67,9 @@
         NavigationManager.NavigateTo("/addtimecard");
     }
 
-    private void EditTimeCard(TimeCard timeCard)
+    private void EditTimeCard(string id)
     {
-        NavigationManager.NavigateTo($"/edittimecard/{timeCard.Id}");
+        NavigationManager.NavigateTo($"/edittimecard/{id}");
     }
 
     private async Task StopWatch(TimeCard timeCard)
@@ -88,6 +89,7 @@
     private void UpdateTimeCard(TimeCard timeCard)
     {
         timeCard.TimeSpent += timeCard.StopwatchValue;
+        timeCard.LastModifiedOn = DateTime.Now;
         EditTimeCardUseCase.Execute(timeCard);
         StateHasChanged();
     }
