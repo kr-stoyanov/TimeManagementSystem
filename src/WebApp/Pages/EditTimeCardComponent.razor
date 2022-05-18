@@ -49,9 +49,9 @@
 @code{
 
     [Parameter]
-    public string? Id { get; set; }
-
-    private TimeCard? timeCard;
+    public string Id { get; set; }
+    private TimeCard? timeCardDb;
+    private TimeCardViewModel? timeCard;
     private string TimeProxy { 
         get => timeCard?.TimeSpent.ToString();
         set => timeCard.TimeSpent.ToString();
@@ -61,20 +61,33 @@
     {
         base.OnInitialized();
 
-        timeCard = new TimeCard();
+        timeCard = new TimeCardViewModel();
     }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this.timeCard = GetTimeCardById.Execute(this.Id);
+        this.timeCardDb = GetTimeCardById.Execute(this.Id);
+        this.timeCard = new TimeCardViewModel
+        {
+                Id = this.timeCardDb.Id,
+                UserName = this.timeCardDb.UserName,
+                ProjectName = this.timeCardDb.ProjectName,
+                TaskName = this.timeCardDb.TaskName,
+                Notes = this.timeCardDb.Notes,
+                Status = this.timeCardDb.Status,
+                TimeSpent = this.timeCardDb.TimeSpent,
+                CreatedOn = this.timeCardDb.CreatedOn,
+                LastModifiedOn = this.timeCardDb.LastModifiedOn,
+                ClosedOn = this.timeCardDb.ClosedOn,
+        };
     }
 
     private void OnValidSubmit()
     {
         this.timeCard.LastModifiedOn = DateTime.Now;
         if (this.timeCard.Status == TimeCardStatus.Closed) this.timeCard.ClosedOn = DateTime.Now;
-        EditTimeCardUseCase.Execute(this.timeCard);
+        EditTimeCardUseCase.Execute(this.timeCard.Transform());
         NavigationManager.NavigateTo("/timecards");
     }
 

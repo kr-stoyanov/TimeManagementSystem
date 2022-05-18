@@ -44,11 +44,5 @@ namespace CoreBusiness
 
         [BsonElement("closedOn")]
         public DateTime ClosedOn { get; set; }
-
-        [BsonElement("isRunning")]
-        public bool IsRunning { get; set; }
-
-        [BsonElement("stopwatchValue")]
-        public TimeSpan StopwatchValue { get; set; }
     }
 }

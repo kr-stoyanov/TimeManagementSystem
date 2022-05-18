@@ -6,6 +6,7 @@
 @inject IEditTimeCardUseCase EditTimeCardUseCase
 @inject IEnumHelperUseCase EnumHelperUseCase
 
+
 <h3>View Time Cards</h3>
 
 @if (timeCards != null)
@@ -39,8 +40,8 @@
                     <td>@card.LastModifiedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
                     <td><button type="button" data-toggle="tooltip" title="Edit" @onclick="@(() => EditTimeCard(card.Id))" class="btn btn-primary oi oi-pencil"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Start" @onclick="@(async () =>  { ChangeStatus(card, "InProgress");  UpdateTimeCard(card); await StopWatch(card); })" class="btn btn-success oi oi-media-play"></button></td>
-                    <td><button type="button" data-toggle="tooltip" title="Pause" @onclick="@(() => { card.IsRunning = false; })" class="btn btn-light oi oi-media-pause"></button></td>
-                    <td><button type="button" data-toggle="tooltip" title="Resume" @onclick="@(async () =>  { await StopWatch(card); })" class="btn btn-light oi oi-media-step-forward"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Pause" @onclick="@(() => { card.IsRunning = false; ChangeStatus(card, "OnHold");  UpdateTimeCard(card); })" class="btn btn-light oi oi-media-pause"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Resume" @onclick="@(async () =>  { ChangeStatus(card, "InProgress"); UpdateTimeCard(card); await StopWatch(card); })" class="btn btn-light oi oi-media-step-forward"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Stop" @onclick="@(() => { card.IsRunning = false; ChangeStatus(card, "Done"); UpdateTimeCard(card); card.StopwatchValue = new TimeSpan(); })" class="btn btn-danger oi oi-media-stop"></button></td>
                     <td><div>@card.StopwatchValue</div></td>
                 </tr>
@@ -53,14 +54,39 @@
 
 
 @code {
-    private List<TimeCard>? timeCards;
+    private List<TimeCard>? timeCardsDb;
+    private List<TimeCardViewModel>? timeCards;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        timeCards = ViewTimeCardsUseCase.Execute()?.ToList();
+        timeCardsDb = ViewTimeCardsUseCase.Execute()?.ToList();
+        MapModels();
     }
+
+    private void MapModels()
+    {
+        if (timeCardsDb != null)
+        {
+              this.timeCards = this.timeCardsDb
+                                .Select(x => new TimeCardViewModel
+                                    {
+                                        Id = x.Id,
+                                        UserName = x.UserName,
+                                        ProjectName = x.ProjectName,
+                                        TaskName = x.TaskName,
+                                        Notes = x.Notes,
+                                        Status = x.Status,
+                                        TimeSpent = x.TimeSpent,
+                                        CreatedOn = x.CreatedOn,
+                                        LastModifiedOn = x.LastModifiedOn,
+                                        ClosedOn = x.ClosedOn,
+                                        IsRunning = false,
+                                        StopwatchValue = new TimeSpan(),
+                                    }).ToList();
+        }
+    }      
 
     private void OnClickAddTimeCard()
     {
@@ -72,7 +98,7 @@
         NavigationManager.NavigateTo($"/edittimecard/{id}");
     }
 
-    private async Task StopWatch(TimeCard timeCard)
+    private async Task StopWatch(TimeCardViewModel timeCard)
     {
         timeCard.IsRunning = true;
         while (timeCard.IsRunning)
@@ -86,15 +112,15 @@
         }
     }
 
-    private void UpdateTimeCard(TimeCard timeCard)
+    private void UpdateTimeCard(TimeCardViewModel timeCard)
     {
         timeCard.TimeSpent += timeCard.StopwatchValue;
         timeCard.LastModifiedOn = DateTime.Now;
-        EditTimeCardUseCase.Execute(timeCard);
+        EditTimeCardUseCase.Execute(timeCard.Transform());
         StateHasChanged();
     }
 
-    private void ChangeStatus(TimeCard timeCard, string status)
+    private void ChangeStatus(TimeCardViewModel timeCard, string status)
     {
         var newStatus = (TimeCardStatus)Enum.Parse(typeof(TimeCardStatus), status);
         timeCard.Status = newStatus;

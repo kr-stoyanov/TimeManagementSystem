@@ -41,24 +41,55 @@
         </tbody>
     </table>
 }
+<br />
+<button class="btn btn-light" @onclick="@(() => OnBack())">Back</button>
 
 @code {
-    private List<TimeCard>? timeCards;
+    private List<TimeCard>? timeCardsDb;
+    private List<TimeCardViewModel>? timeCards;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        timeCards = TimeCardHistoryUseCase.Execute()?.ToList();
+        timeCardsDb = TimeCardHistoryUseCase.Execute()?.ToList();
+        MapModels();
         StateHasChanged();
     }
 
-    private void Reopen(TimeCard timeCard)
+    private void MapModels()
     {
-        timeCard.Status = TimeCardStatus.New;
+        if (timeCardsDb != null)
+        {
+              this.timeCards = this.timeCardsDb
+                                .Select(x => new TimeCardViewModel
+                                    {
+                                        Id = x.Id,
+                                        UserName = x.UserName,
+                                        ProjectName = x.ProjectName,
+                                        TaskName = x.TaskName,
+                                        Notes = x.Notes,
+                                        Status = x.Status,
+                                        TimeSpent = x.TimeSpent,
+                                        CreatedOn = x.CreatedOn,
+                                        LastModifiedOn = x.LastModifiedOn,
+                                        ClosedOn = x.ClosedOn,
+                                        IsRunning = false,
+                                        StopwatchValue = new TimeSpan(),
+                                    }).ToList();
+        }
+    }
+
+    private void Reopen(TimeCardViewModel timeCard)
+    {
+        timeCard.Status = TimeCardStatus.Open;
         timeCard.LastModifiedOn = DateTime.Now;
-        EditTimeCardUseCase.Execute(timeCard);
+        EditTimeCardUseCase.Execute(timeCard.Transform());
         StateHasChanged();
         OnInitialized();
+    }
+    private void OnBack()
+    {
+        NavigationManager.NavigateTo("/timecards");
     }
 }

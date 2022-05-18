@@ -4,7 +4,7 @@ namespace CoreBusiness.Enums
 {
     public enum TimeCardStatus
     {
-        New = 2,
+        Open = 2,
 
         [Display(Name = "In Progress")]
         InProgress = 4,

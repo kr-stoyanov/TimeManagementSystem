@@ -6,6 +6,7 @@ using Plugins.DataStore.MongoDb.Models;
 using UseCases;
 using UseCases.DataStorePluginInterfaces;
 using UseCases.UseCaseInterfaces;
+using WebApp.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,7 @@ builder.Services.AddTransient<IEditTimeCardUseCase, EditTimeCardUseCase>();
 builder.Services.AddTransient<IViewTimeCardsUseCase, ViewTimeCardsUseCase>();
 builder.Services.AddTransient<ITimeCardHistoryUseCase, TimeCardHistoryUseCase>();
 builder.Services.AddTransient<IGetTimeCardByIdUseCase, GetTimeCardByIdUseCase>();
+builder.Services.AddTransient<ITimeCardViewModel, TimeCardViewModel>();
 
 var app = builder.Build();
 

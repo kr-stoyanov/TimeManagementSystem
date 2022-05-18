@@ -47,20 +47,20 @@
 
 @code {
 
-    private TimeCard? timeCard;
+    private TimeCardViewModel? timeCard;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        this.timeCard = new TimeCard();
+        this.timeCard = new TimeCardViewModel();
     }
 
     private void OnValidSubmit()
     {
         this.timeCard.CreatedOn = DateTime.Now;
         this.timeCard.LastModifiedOn = DateTime.Now;
-        AddTimeCardUseCase.Execute(this.timeCard);
+        AddTimeCardUseCase.Execute(this.timeCard.Transform());
         NavigationManager.NavigateTo("/timecards");
     }
 

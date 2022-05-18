@@ -12,10 +12,10 @@ namespace Plugins.DataStore.InMemory
         {
             timeCards = new List<TimeCard>()
             {
-                new TimeCard(){ Id = Guid.NewGuid().ToString(), UserName = "Krasimir Stoyanov", ProjectName = "Sundowning", TaskName = "Process Manual Documents in Databricks", Notes = "Add new notebook in Databricks - use python", Status = TimeCardStatus.New },
-                new TimeCard(){ Id = Guid.NewGuid().ToString(), UserName = "Krasimir Stoyanov", ProjectName = "Sundowning", TaskName = "Process GSA fles", Notes = "Extract attachments and upload them to azure blob storage - use dotnet", Status = TimeCardStatus.New},
-                new TimeCard(){ Id = Guid.NewGuid().ToString(), UserName = "Krasimir Stoyanov", ProjectName = "Sundowning", TaskName = "Onboard newcomer", Notes = "Induction: ADF, ADO Pipeline, C# Solution", Status = TimeCardStatus.New},
-                new TimeCard(){ Id = Guid.NewGuid().ToString(), UserName = "Krasimir Stoyanov", ProjectName = "Sundowning", TaskName = "Bug fixing", Notes = "", Status = TimeCardStatus.New},
+                new TimeCard(){ Id = Guid.NewGuid().ToString(), UserName = "Krasimir Stoyanov", ProjectName = "Sundowning", TaskName = "Process Manual Documents in Databricks", Notes = "Add new notebook in Databricks - use python", Status = TimeCardStatus.Open },
+                new TimeCard(){ Id = Guid.NewGuid().ToString(), UserName = "Krasimir Stoyanov", ProjectName = "Sundowning", TaskName = "Process GSA fles", Notes = "Extract attachments and upload them to azure blob storage - use dotnet", Status = TimeCardStatus.Open},
+                new TimeCard(){ Id = Guid.NewGuid().ToString(), UserName = "Krasimir Stoyanov", ProjectName = "Sundowning", TaskName = "Onboard newcomer", Notes = "Induction: ADF, ADO Pipeline, C# Solution", Status = TimeCardStatus.Open},
+                new TimeCard(){ Id = Guid.NewGuid().ToString(), UserName = "Krasimir Stoyanov", ProjectName = "Sundowning", TaskName = "Bug fixing", Notes = "", Status = TimeCardStatus.Open},
             };
         }
 
