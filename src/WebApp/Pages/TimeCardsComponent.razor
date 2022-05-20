@@ -1,32 +1,32 @@
 ﻿@page "/timecards"
 
 @inject NavigationManager NavigationManager
-@inject IViewTimeCardsUseCase ViewTimeCardsUseCase
+@inject ProtectedLocalStorage BrowserStorage
+@inject IEnumHelperUseCase EnumHelperUseCase
 @inject IGetTimeCardByIdUseCase GetTimeCardById
 @inject IEditTimeCardUseCase EditTimeCardUseCase
-@inject IEnumHelperUseCase EnumHelperUseCase
-
+@inject IViewTimeCardsUseCase ViewTimeCardsUseCase
 
 <h3>View Time Cards</h3>
 
 @if (timeCards != null)
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Project</th>
-                <th>Task</th>
-                <th>Notes</th>
-                <th>Status</th>
-                <th>Time Spent</th>
-                <th>Created On</th>
-                <th>Last Modified On</th>
-                <th>Edit</th>
-                <th colspan=6>Timer</th>
-            </tr>
-        </thead>
-        <tbody>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Project</th>
+                    <th>Task</th>
+                    <th>Notes</th>
+                    <th>Status</th>
+                    <th>Time Spent</th>
+                    <th>Created On</th>
+                    <th>Last Modified On</th>
+                    <th>Edit</th>
+                    <th colspan=6>Timer</th>
+                </tr>
+            </thead>
+            <tbody>
             @foreach (var card in timeCards)
             {
                 <tr>
@@ -38,55 +38,64 @@
                     <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min : @card.TimeSpent.Seconds sec</td>
                     <td>@card.CreatedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
                     <td>@card.LastModifiedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
-                    <td><button type="button" data-toggle="tooltip" title="Edit" @onclick="@(() => EditTimeCard(card.Id))" class="btn btn-primary oi oi-pencil"></button></td>
-                    <td><button type="button" data-toggle="tooltip" title="Start" @onclick="@(async () =>  { ChangeStatus(card, "InProgress");  UpdateTimeCard(card); await StopWatch(card); })" class="btn btn-success oi oi-media-play"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Edit" @onclick="@(async () => { await CacheCardStatus();  EditTimeCard(card.Id); })" class="btn btn-primary oi oi-pencil"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Start" @onclick="@(async () =>  { ChangeStatus(card, "InProgress"); UpdateTimeCard(card); await StopWatch(card); })" class="btn btn-success oi oi-media-play"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Pause" @onclick="@(() => { card.IsRunning = false; ChangeStatus(card, "OnHold");  UpdateTimeCard(card); })" class="btn btn-light oi oi-media-pause"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Resume" @onclick="@(async () =>  { ChangeStatus(card, "InProgress"); UpdateTimeCard(card); await StopWatch(card); })" class="btn btn-light oi oi-media-step-forward"></button></td>
-                    <td><button type="button" data-toggle="tooltip" title="Stop" @onclick="@(() => { card.IsRunning = false; ChangeStatus(card, "Done"); UpdateTimeCard(card); card.StopwatchValue = new TimeSpan(); })" class="btn btn-danger oi oi-media-stop"></button></td>
+                    <td><button type="button" data-toggle="tooltip" title="Stop" @onclick="@(() => { card.IsRunning = false; ChangeStatus(card, "Done"); AddTimeSpent(card); UpdateTimeCard(card); card.StopwatchValue = new TimeSpan(); })" class="btn btn-danger oi oi-media-stop"></button></td>
                     <td><div>@card.StopwatchValue</div></td>
                 </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 }
 <br />
-<button class="btn btn-primary" @onclick="OnClickAddTimeCard">Add Time Card</button>
+<button class="btn btn-primary" @onclick="@(async () => { await CacheCardStatus();  OnClickAddTimeCard(); })">Add Time Card</button>
 
 
 @code {
     private List<TimeCard>? timeCardsDb;
     private List<TimeCardViewModel>? timeCards;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         base.OnInitialized();
-
         timeCardsDb = ViewTimeCardsUseCase.Execute()?.ToList();
         MapModels();
+        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ReadLocalStorageCacheAsync();
+            await ClearLocalStorageCacheAsync();
+        }
     }
 
     private void MapModels()
     {
         if (timeCardsDb != null)
         {
-              this.timeCards = this.timeCardsDb
-                                .Select(x => new TimeCardViewModel
-                                    {
-                                        Id = x.Id,
-                                        UserName = x.UserName,
-                                        ProjectName = x.ProjectName,
-                                        TaskName = x.TaskName,
-                                        Notes = x.Notes,
-                                        Status = x.Status,
-                                        TimeSpent = x.TimeSpent,
-                                        CreatedOn = x.CreatedOn,
-                                        LastModifiedOn = x.LastModifiedOn,
-                                        ClosedOn = x.ClosedOn,
-                                        IsRunning = false,
-                                        StopwatchValue = new TimeSpan(),
-                                    }).ToList();
+            this.timeCards = this.timeCardsDb
+                              .Select(x => new TimeCardViewModel
+                                  {
+                                      Id = x.Id,
+                                      UserName = x.UserName,
+                                      ProjectName = x.ProjectName,
+                                      TaskName = x.TaskName,
+                                      Notes = x.Notes,
+                                      Status = x.Status,
+                                      TimeSpent = x.TimeSpent,
+                                      CreatedOn = x.CreatedOn,
+                                      LastModifiedOn = x.LastModifiedOn,
+                                      ClosedOn = x.ClosedOn,
+                                      IsRunning = false,
+                                      StopwatchValue = new TimeSpan(),
+                                  }).ToList();
         }
-    }      
+    }
 
     private void OnClickAddTimeCard()
     {
@@ -96,6 +105,34 @@
     private void EditTimeCard(string id)
     {
         NavigationManager.NavigateTo($"/edittimecard/{id}");
+    }
+
+    private async Task CacheCardStatus()
+    {
+        foreach (var card in timeCards) await BrowserStorage.SetAsync($"timerValue-{card.Id}", card.StopwatchValue);
+    }
+
+    private async Task ClearLocalStorageCacheAsync()
+    {
+        foreach (var card in timeCards) await ClearCacheAsync(card);
+    }
+
+    private async Task ClearCacheAsync(TimeCardViewModel timeCard)
+    {
+        await BrowserStorage.DeleteAsync($"timerValue-{timeCard.Id}");
+    }
+
+    private async Task ReadLocalStorageCacheAsync()
+    {
+        foreach (var card in timeCards) await ReadCacheAsync(card);
+        StateHasChanged();
+    }
+
+    private async Task ReadCacheAsync(TimeCardViewModel timeCard)
+    {
+        var timerValue = await BrowserStorage.GetAsync<TimeSpan>($"timerValue-{timeCard.Id}");
+
+        timeCard.StopwatchValue = timerValue.Success ? timerValue.Value : new TimeSpan();
     }
 
     private async Task StopWatch(TimeCardViewModel timeCard)
@@ -114,11 +151,12 @@
 
     private void UpdateTimeCard(TimeCardViewModel timeCard)
     {
-        timeCard.TimeSpent += timeCard.StopwatchValue;
         timeCard.LastModifiedOn = DateTime.Now;
         EditTimeCardUseCase.Execute(timeCard.Transform());
         StateHasChanged();
     }
+
+    private void AddTimeSpent(TimeCardViewModel timeCard) => timeCard.TimeSpent += timeCard.StopwatchValue;
 
     private void ChangeStatus(TimeCardViewModel timeCard, string status)
     {
