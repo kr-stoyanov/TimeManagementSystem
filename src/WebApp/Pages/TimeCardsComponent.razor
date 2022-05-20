@@ -57,7 +57,7 @@
     private List<TimeCard>? timeCardsDb;
     private List<TimeCardViewModel>? timeCards;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         base.OnInitialized();
         timeCardsDb = ViewTimeCardsUseCase.Execute()?.ToList();
