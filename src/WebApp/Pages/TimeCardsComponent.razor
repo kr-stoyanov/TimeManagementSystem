@@ -134,7 +134,9 @@
     private async Task ReadCacheAsync(TimeCardViewModel timeCard)
     {
         var timerValue = await BrowserStorage.GetAsync<TimeSpan>($"timerValue-{timeCard.Id}");
+        var timerStatus = await BrowserStorage.GetAsync<bool>($"timerStatus-{timeCard.Id}");
 
+        timeCard.IsRunning = timerStatus.Success ? timerStatus.Value : false;
         timeCard.StopwatchValue = timerValue.Success ? timerValue.Value : new TimeSpan();
     }
 
