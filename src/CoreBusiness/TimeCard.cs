@@ -13,11 +13,6 @@ namespace CoreBusiness
 
         [Required]
         [MaxLength(50)]
-        [BsonElement("userName")]
-        public string? UserName { get; set; }
-
-        [Required]
-        [MaxLength(50)]
         [BsonElement("project")]
         public string? ProjectName { get; set; }
 
@@ -35,6 +30,15 @@ namespace CoreBusiness
 
         [BsonElement("timeSpent")]
         public TimeSpan TimeSpent { get; set; }
+
+        [BsonElement("createdBy")]
+        public string? CreatedBy { get; set; }
+
+        [BsonElement("userName")]
+        public string? UserName { get; set; }
+
+        [BsonElement("userId")]
+        public Guid? UserId { get; set; }
 
         [BsonElement("createdOn")]
         public DateTime CreatedOn { get; set; }

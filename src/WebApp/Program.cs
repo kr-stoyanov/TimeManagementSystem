@@ -1,18 +1,18 @@
+using AspNetCore.Identity.Mongo;
+using AspNetCore.Identity.MongoDbCore.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using Plugins.DataStore.InMemory;
 using Plugins.DataStore.MongoDb;
 using Plugins.DataStore.MongoDb.Models;
 using UseCases;
-using UseCases.DataStorePluginInterfaces;
 using UseCases.UseCaseInterfaces;
+using UseCases.DataStorePluginInterfaces;
 using WebApp.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
 
 //Dependency Injection for In-Memory Data Store
 //builder.Services.AddScoped<ITimeCardInMemoryRepository, TimeCardInMemoryRepository>();
@@ -21,23 +21,55 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<IDatabaseSettings, DatabaseSettings>();
 builder.Services.AddSingleton<ITimeCardMongoDbRepository, TimeCardMongoDbRepository>();
 
+
 //Database configuration settings - MongoDb
 builder.Services.Configure<DatabaseSettings>(
                 builder.Configuration.GetSection(nameof(DatabaseSettings)));
 
 builder.Services.AddSingleton<IDatabaseSettings>(x => x.GetRequiredService<IOptions<DatabaseSettings>>().Value);
 
-builder.Services.AddSingleton<IMongoClient>(s =>
-        new MongoClient(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString")));
+var mongoDbIdentityConfig = new MongoDbIdentityConfiguration
+{
+    MongoDbSettings = new MongoDbSettings
+    {
+        ConnectionString = builder.Configuration
+                            .GetSection(nameof(DatabaseSettings)).GetSection("ConnectionString").Value,
+        DatabaseName = builder.Configuration
+                            .GetSection(nameof(DatabaseSettings)).GetSection("DatabaseName").Value
+    },
+    IdentityOptionsAction = options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequiredLength = 5;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireLowercase = false;
+    }
+};
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
+    (
+        mongoDbIdentityConfig.MongoDbSettings.ConnectionString,
+        mongoDbIdentityConfig.MongoDbSettings.DatabaseName
+    )
+    .AddDefaultTokenProviders();
+
+builder.Services.AddOptions();
+builder.Services.AddRazorPages();
+builder.Services.AddSession();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddAuthentication().AddCookie();
+
 
 //Dependency Injection for UseCases and Repositories
+builder.Services.AddTransient<ITimeCardViewModel, TimeCardViewModel>();
 builder.Services.AddTransient<IEnumHelperUseCase, EnumHelperUseCase>();
 builder.Services.AddTransient<IAddTimeCardUseCase, AddTimeCardUseCase>();
 builder.Services.AddTransient<IEditTimeCardUseCase, EditTimeCardUseCase>();
 builder.Services.AddTransient<IViewTimeCardsUseCase, ViewTimeCardsUseCase>();
 builder.Services.AddTransient<ITimeCardHistoryUseCase, TimeCardHistoryUseCase>();
 builder.Services.AddTransient<IGetTimeCardByIdUseCase, GetTimeCardByIdUseCase>();
-builder.Services.AddTransient<ITimeCardViewModel, TimeCardViewModel>();
 
 var app = builder.Build();
 
@@ -52,8 +84,11 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

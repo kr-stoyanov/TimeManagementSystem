@@ -8,8 +8,6 @@ namespace WebApp.ViewModels
     {
         public string Id { get; set; }
 
-        [Required]
-        [MaxLength(50)]
         public string? UserName { get; set; }
 
         [Required]
@@ -26,6 +24,8 @@ namespace WebApp.ViewModels
         public TimeCardStatus Status { get; set; }
 
         public TimeSpan TimeSpent { get; set; }
+
+        public string? CreatedBy { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
@@ -46,6 +46,7 @@ namespace WebApp.ViewModels
                 Notes = this.Notes,
                 Status = this.Status,
                 TimeSpent = this.TimeSpent,
+                CreatedBy = this.CreatedBy,
                 CreatedOn = this.CreatedOn,
                 LastModifiedOn = this.LastModifiedOn,
                 ClosedOn = this.ClosedOn,

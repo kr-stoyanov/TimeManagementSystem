@@ -6,6 +6,8 @@
 
         string DatabaseName { get; set; }
 
-        string CollectionName { get; set; }
+        string? TimeCardsCollection { get; set; }
+
+        string? UsersCollection { get; set; }
     }
 }

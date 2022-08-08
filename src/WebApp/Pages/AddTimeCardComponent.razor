@@ -13,7 +13,7 @@
         <ValidationSummary></ValidationSummary>
         <div class="form-group">
             <label for="username">Username</label>
-            <InputText id="username" @bind-Value="timeCard.UserName" class="form-control"></InputText>
+            <text id="username">@userName</text>
         </div>
         <div class="form-group">
             <label for="project">Project</label>
@@ -47,19 +47,33 @@
 
 @code {
 
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
     private TimeCardViewModel? timeCard;
 
-    protected override void OnInitialized()
+    private string? createdBy;
+
+    private string userName;
+
+    protected override async Task OnInitializedAsync()
     {
         base.OnInitialized();
 
         this.timeCard = new TimeCardViewModel();
+
+        var authState = await AuthenticationState;
+        createdBy = $"{authState?.User?.Claims?.FirstOrDefault(x => x.Type == "firstName")?.Value} {authState?.User?.Claims?.FirstOrDefault(x => x.Type == "lastName")?.Value}";
+        userName = authState?.User?.Identity?.Name;
     }
 
     private void OnValidSubmit()
     {
         this.timeCard.CreatedOn = DateTime.Now;
         this.timeCard.LastModifiedOn = DateTime.Now;
+        this.timeCard.CreatedBy = createdBy;
+        this.timeCard.UserName = userName;
+
         AddTimeCardUseCase.Execute(this.timeCard.Transform());
         NavigationManager.NavigateTo("/timecards");
     }

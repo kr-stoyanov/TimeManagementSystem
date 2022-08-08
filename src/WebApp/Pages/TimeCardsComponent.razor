@@ -14,7 +14,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Username</th>
+                        <th>CreatedBy</th>
                         <th>Project</th>
                         <th>Task</th>
                         <th>Notes</th>
@@ -30,7 +30,7 @@
             @foreach (var card in timeCards)
             {
                         <tr>
-                            <td>@card.UserName</td>
+                            <td>@card.CreatedBy</td>
                             <td>@card.ProjectName</td>
                             <td>@card.TaskName</td>
                             <td>@card.Notes</td>
@@ -88,6 +88,7 @@
                                   Notes = x.Notes,
                                   Status = x.Status,
                                   TimeSpent = x.TimeSpent,
+                                  CreatedBy = x.CreatedBy,
                                   CreatedOn = x.CreatedOn,
                                   LastModifiedOn = x.LastModifiedOn,
                                   ClosedOn = x.ClosedOn,
