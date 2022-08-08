@@ -1,9 +1,27 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+
 
 <PageTitle>TMS</PageTitle>
-
 <h1>Time Management System</h1>
+<AuthorizeView>
+    <Authorized>
+        <p>Hello, @_name</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>Hello, please login or register if you want to browse and use the TMS!</p>
+    </NotAuthorized>
+</AuthorizeView>
 
-Welcome to our new app.
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState>? authenticationStateTask { get; set; }
+    private string? _name; 
 
-<!--SurveyPrompt Title="How is Blazor working for you?" />
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        _name = authState?.User?.Claims?.FirstOrDefault(x => x.Type == "firstName")?.Value;
+
+    }
+}
