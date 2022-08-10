@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using UseCases.UseCaseInterfaces;
 
-namespace UseCases
+namespace UseCases.TimeCardUseCases
 {
     public class EnumHelperUseCase : IEnumHelperUseCase
     {

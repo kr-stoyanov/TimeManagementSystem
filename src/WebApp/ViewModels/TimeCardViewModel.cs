@@ -38,7 +38,8 @@ namespace WebApp.ViewModels
         public TimeSpan StopwatchValue { get; set; }
 
         public TimeCard Transform() =>
-            new TimeCard {
+            new()
+            {
                 Id = this.Id,
                 UserName = this.UserName,
                 ProjectName = this.ProjectName,

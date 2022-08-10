@@ -1,0 +1,61 @@
+﻿@page "/addproject"
+
+@inject NavigationManager NavigationManager
+@inject IAddProjectUseCase AddProjectUseCase
+<h3>Add New Project </h3>
+
+<EditForm Model="project" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+    <div class="form-group">
+        <label>Created By</label>
+        <p class="text-uppercase">@createdBy</p>
+    </div>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <InputText id="name" @bind-Value="project.Name" class="form-control"></InputText>
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <InputText id="description" @bind-Value="project.Description" class="form-control"></InputText>
+    </div>
+    <hr />
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-light" @onclick="OnCancel">Cancel</button>
+    </div>
+</EditForm>
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    private Project project;
+    private string createdBy;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        this.project = new Project();
+        var authState = await AuthenticationState;
+        createdBy = authState?.User?.Identity?.Name;
+    }
+
+    private void OnValidSubmit()
+    {
+        this.project.CreatedOn = DateTime.Now;
+        this.project.LastModifiedOn = DateTime.Now;
+        this.project.LastModifiedBy = createdBy;
+        this.project.CreatedBy = createdBy;
+
+        AddProjectUseCase.Execute(this.project);
+        NavigationManager.NavigateTo("/projects");
+    }
+
+    private void OnCancel()
+    {
+        NavigationManager.NavigateTo("/projects");
+    }
+}

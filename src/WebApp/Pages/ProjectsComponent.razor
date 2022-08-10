@@ -1,0 +1,63 @@
+﻿@page "/projects"
+
+@inject NavigationManager NavigationManager
+@inject IViewProjectsUseCase ViewProjectsUseCase
+
+<h3>Projects</h3>
+
+@if (projects != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Created By</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Created On</th>
+                <th>Last Modified On</th>
+                <th>Last Modified By</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var proj in projects)
+            {
+                <tr>
+                    <td>@proj.CreatedBy</td>
+                    <td>@proj.Name</td>
+                    <td>@proj.Description</td>
+                    <td>@proj.CreatedOn</td>
+                    <td>@proj.LastModifiedOn</td>
+                    <td>@proj.LastModifiedBy</td>
+                    <td><button type="button" data-toggle="tooltip" title="Edit" @onclick="@( () => { OnClickEditProject(proj.Id); })" class="btn btn-primary oi oi-pencil"></button></td>
+              
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<button class="btn btn-primary" @onclick="@(() => { OnClickAddNewProject(); })">Add New Project</button>
+
+@code {
+
+    private List<Project>? projects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        projects = ViewProjectsUseCase.Execute()?.ToList();
+        StateHasChanged();
+    }
+
+    private void OnClickAddNewProject()
+    {
+        NavigationManager.NavigateTo("/addproject");
+    }
+
+    private void OnClickEditProject(string id)
+    {
+        NavigationManager.NavigateTo($"/editproject/{id}");
+    }
+}

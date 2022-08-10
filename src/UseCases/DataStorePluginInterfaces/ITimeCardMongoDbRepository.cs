@@ -6,12 +6,14 @@ namespace UseCases.DataStorePluginInterfaces
     {
         TimeCard Create(TimeCard timeCard);
 
-        IEnumerable<TimeCard> Read();
+        IEnumerable<TimeCard> ReadByUser(string userName);
 
         TimeCard Find(string id);
 
         void Update(TimeCard timeCard);
 
-        IEnumerable<TimeCard> ReadClosed();
+        IEnumerable<TimeCard> ReadClosedByUser(string userName);
+
+        IEnumerable<TimeCard> ReadForExportByUser(string userName);
     }
 }

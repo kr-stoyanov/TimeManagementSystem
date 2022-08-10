@@ -4,7 +4,7 @@
 <AuthorizeView>
     <Authorized>
         Hello,  @_name
-        <a href="identity/account/logout" class="btn btn-danger oi oi-account-logout"></a>
+        <a href="identity/account/logout" class="btn btn-light oi oi-account-logout"></a>
     </Authorized>
     <NotAuthorized>
         <a href="identity/account/login" class="btn btn-success">Login</a>
@@ -15,7 +15,7 @@
 
 @code {
     [CascadingParameter]
-    public Task<AuthenticationState>? authenticationStateTask { get; set; }
+    public Task<AuthenticationState> authenticationStateTask { get; set; }
 
     private string? _name;
     

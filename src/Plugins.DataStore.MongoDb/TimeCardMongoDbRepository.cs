@@ -29,16 +29,20 @@ namespace Plugins.DataStore.MongoDb
             return timeCard;
         }
 
-        public IEnumerable<TimeCard> Read() =>
-            timeCards.Find(x => x.Status != TimeCardStatus.Closed).ToList();
+        public IEnumerable<TimeCard> ReadByUser(string userName) =>
+            this.timeCards.Find(x => x.Status != TimeCardStatus.Closed && x.UserName.ToLower() == userName.ToLower()).ToList();
 
         public TimeCard Find(string id) =>
             this.timeCards.Find(tc => tc.Id == id).SingleOrDefault();
 
         public void Update(TimeCard timeCard) =>
-            timeCards.ReplaceOne(tc => tc.Id == timeCard.Id, timeCard);
+            this.timeCards.ReplaceOne(tc => tc.Id == timeCard.Id, timeCard);
 
-        public IEnumerable<TimeCard> ReadClosed() =>
-            timeCards.Find(x => x.Status == TimeCardStatus.Closed).ToList();
+        public IEnumerable<TimeCard> ReadClosedByUser(string userName) =>
+            this.timeCards.Find(x => x.Status == TimeCardStatus.Closed 
+                           && x.UserName.ToLower() == userName.ToLower()).ToList();
+
+        public IEnumerable<TimeCard> ReadForExportByUser(string userName) => 
+            this.timeCards.Find(x => x.UserName.ToLower() == userName.ToLower()).ToList();
     }
 }

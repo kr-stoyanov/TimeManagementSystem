@@ -1,0 +1,70 @@
+﻿@page "/report"
+
+@inject IJSRuntime JSRuntime
+@inject IEnumHelperUseCase EnumHelperUseCase
+@inject IViewReportByUserUseCase ReportByUserUseCase
+
+<h3>Report</h3>
+
+@if (timeCards != null)
+{
+    <div id="printarea">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Created By</th>
+                    <th>Project</th>
+                    <th>Task</th>
+                    <th>Notes</th>
+                    <th>Status</th>
+                    <th>Time Spent</th>
+                    <th>Created On</th>
+                    <th>Last Modified On</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var card in timeCards)
+                {
+                    <tr>
+                        <td>@card.CreatedBy</td>
+                        <td>@card.ProjectName</td>
+                        <td>@card.TaskName</td>
+                        <td>@card.Notes</td>
+                        <td>@EnumHelperUseCase.GetStatusDisplayName(card.Status)</td>
+                        <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min : @card.TimeSpent.Seconds sec</td>
+                        <td>@card.CreatedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
+                        <td>@card.LastModifiedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<br />
+<button class="btn btn-success" @onclick="@(() => { Print(); })">Print</button>
+
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    private List<TimeCard>? timeCards;
+    private string? userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var auth = await AuthenticationState;
+        userName = auth.User?.Identity?.Name;
+
+        timeCards = ReportByUserUseCase.Execute(userName)?.ToList();
+        StateHasChanged();
+    }
+
+    private void Print()
+    {
+        JSRuntime.InvokeVoidAsync("print");
+    }
+}
