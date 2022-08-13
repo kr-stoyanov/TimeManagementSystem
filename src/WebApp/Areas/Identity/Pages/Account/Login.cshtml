@@ -3,24 +3,34 @@
 @{
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Login</h4>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <h4>Login</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control" style="width:auto" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" style="width:auto" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <hr />
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a href="/" class="btn btn-light">Cancel</a>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h4>Use another service to login!</h4>
             <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-             <hr />
-            <button type="submit" class="btn btn-primary">Login</button>
-            <a href="/" class="btn btn-light">Cancel</a>
-        </form>
+            <h3>Google</h3>
+            </br>
+            <h3>Facebook</h3>
+        </div>
     </div>
+</div>

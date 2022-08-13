@@ -5,10 +5,12 @@ using Microsoft.Extensions.Options;
 using Plugins.DataStore.InMemory;
 using Plugins.DataStore.MongoDb;
 using Plugins.DataStore.MongoDb.Models;
-using UseCases;
 using UseCases.UseCaseInterfaces;
 using UseCases.DataStorePluginInterfaces;
 using WebApp.ViewModels;
+using UseCases.TimeCardUseCases;
+using UseCases.ProjectUseCases;
+using UseCases.Report;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Dependency Injection for MongoDb DataStore
 builder.Services.AddSingleton<IDatabaseSettings, DatabaseSettings>();
 builder.Services.AddSingleton<ITimeCardMongoDbRepository, TimeCardMongoDbRepository>();
+builder.Services.AddSingleton<IProjectMongoDbRepository, ProjectMongoDbRepository>();
 
 
 //Database configuration settings - MongoDb
@@ -64,12 +67,17 @@ builder.Services.AddAuthentication().AddCookie();
 
 //Dependency Injection for UseCases and Repositories
 builder.Services.AddTransient<ITimeCardViewModel, TimeCardViewModel>();
+builder.Services.AddTransient<IAddProjectUseCase, AddProjectUseCase>();
 builder.Services.AddTransient<IEnumHelperUseCase, EnumHelperUseCase>();
+builder.Services.AddTransient<IEditProjectUseCase, EditProjectUseCase>();
 builder.Services.AddTransient<IAddTimeCardUseCase, AddTimeCardUseCase>();
 builder.Services.AddTransient<IEditTimeCardUseCase, EditTimeCardUseCase>();
-builder.Services.AddTransient<IViewTimeCardsUseCase, ViewTimeCardsUseCase>();
-builder.Services.AddTransient<ITimeCardHistoryUseCase, TimeCardHistoryUseCase>();
+builder.Services.AddTransient<IViewProjectsUseCase, ViewProjectsUseCase>();
+builder.Services.AddTransient<IGetProjectByIdUseCase, GetProjectByIdUseCase>();
 builder.Services.AddTransient<IGetTimeCardByIdUseCase, GetTimeCardByIdUseCase>();
+builder.Services.AddTransient<IViewReportByUserUseCase, ViewReportByUserUseCase>();
+builder.Services.AddTransient<IViewTimeCardsByUserUseCase, ViewTimeCardsByUserUseCase>();
+builder.Services.AddTransient<ITimeCardHistoryByUserUseCase, TimeCardHistoryByUserUseCase>();
 
 var app = builder.Build();
 

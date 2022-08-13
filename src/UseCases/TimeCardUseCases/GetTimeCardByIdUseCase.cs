@@ -2,19 +2,19 @@
 using UseCases.DataStorePluginInterfaces;
 using UseCases.UseCaseInterfaces;
 
-namespace UseCases
+namespace UseCases.TimeCardUseCases
 {
-    public class TimeCardHistoryUseCase : ITimeCardHistoryUseCase
+    public class GetTimeCardByIdUseCase : IGetTimeCardByIdUseCase
     {
         private readonly ITimeCardMongoDbRepository timeCardRepository;
 
-        public TimeCardHistoryUseCase(ITimeCardMongoDbRepository timeCardRepository)
+        public GetTimeCardByIdUseCase(ITimeCardMongoDbRepository timeCardRepository)
         {
             this.timeCardRepository = timeCardRepository;
         }
-        public IEnumerable<TimeCard> Execute()
+        public TimeCard Execute(string id)
         {
-            return this.timeCardRepository.ReadClosed();
+            return timeCardRepository.Find(id);
         }
     }
 }

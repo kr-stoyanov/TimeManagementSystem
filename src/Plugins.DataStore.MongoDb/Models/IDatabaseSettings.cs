@@ -9,5 +9,8 @@
         string? TimeCardsCollection { get; set; }
 
         string? UsersCollection { get; set; }
+
+        string? ProjectsCollection { get; set; }
+
     }
 }

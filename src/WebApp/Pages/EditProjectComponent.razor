@@ -1,0 +1,80 @@
+﻿@page "/editproject/{id}"
+
+@inject NavigationManager NavigationManager
+@inject IEditProjectUseCase EditProjectUseCase
+@inject IGetProjectByIdUseCase GetProjectByIdUseCase
+
+<h3>Edit Project</h3>
+
+@if (project != null)
+{
+    <EditForm Model="project" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+        <div class="form-group">
+            <label>Created By</label>
+            <p class="text-uppercase">@project.CreatedBy</p>
+        </div>
+        <div class="form-group">
+            <label for="project">Project</label>
+            <InputText id="project" @bind-Value="project.Name" class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label for="task">Task</label>
+            <InputText id="task" @bind-Value="project.Description" class="form-control"></InputText>
+        </div>
+        <br>
+        <div class="form-group">
+            <label>Currently Being Modfied By</label>
+            <br>
+            <p class="text-uppercase">@modifiedBy</p>
+        </div>
+        <hr />
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-light" @onclick="OnCancel">Cancel</button>
+        </div>
+    </EditForm>
+}
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private string? modifiedBy;
+    private Project? project;
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+
+        this.project = new Project();
+
+        var authState = await AuthenticationState;
+        modifiedBy = authState?.User?.Identity?.Name;
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.project = GetProjectByIdUseCase.Execute(this.Id);
+    }
+
+
+    private void OnValidSubmit()
+    {
+        this.project.LastModifiedOn = DateTime.Now;
+        this.project.LastModifiedBy = modifiedBy;
+        EditProjectUseCase.Execute(this.project);
+        NavigationManager.NavigateTo("/projects");
+    }
+
+    private void OnCancel()
+    {
+        NavigationManager.NavigateTo("/projects");
+    }
+}

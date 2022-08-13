@@ -3,7 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject IEnumHelperUseCase EnumHelperUseCase
 @inject IEditTimeCardUseCase EditTimeCardUseCase
-@inject ITimeCardHistoryUseCase TimeCardHistoryUseCase
+@inject ITimeCardHistoryByUserUseCase TimeCardHistoryByUserUseCase
 
 <h3>History</h3>
 
@@ -12,7 +12,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Username</th>
+                <th>Created By</th>
                 <th>Project</th>
                 <th>Task</th>
                 <th>Notes</th>
@@ -27,7 +27,7 @@
             @foreach (var card in timeCards)
             {
                 <tr>
-                    <td>@card.UserName</td>
+                    <td>@card.CreatedBy</td>
                     <td>@card.ProjectName</td>
                     <td>@card.TaskName</td>
                     <td>@card.Notes</td>
@@ -35,7 +35,7 @@
                     <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min : @card.TimeSpent.Seconds sec</td>
                     <td>@card.CreatedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
                     <td>@card.ClosedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
-                    <th><button type="button" data-toggle="tooltip" title="Reopen" @onclick="@(() => Reopen(card))" class="btn btn-success oi oi-reload"></button></th>
+                    <th><button type="button" data-toggle="tooltip" title="Reopen" @onclick="@(async() => await ReopenAsync(card))" class="btn btn-success oi oi-reload"></button></th>
                 </tr>
             }
         </tbody>
@@ -45,14 +45,21 @@
 <button class="btn btn-light" @onclick="@(() => OnBack())">Back</button>
 
 @code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
     private List<TimeCard>? timeCardsDb;
     private List<TimeCardViewModel>? timeCards;
+    private string? userName;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        await base.OnInitializedAsync();
+        var auth = await AuthenticationState;
+        userName = auth.User?.Identity?.Name;
 
-        timeCardsDb = TimeCardHistoryUseCase.Execute()?.ToList();
+        timeCardsDb = TimeCardHistoryByUserUseCase.Execute(userName)?.ToList();
         MapModels();
         StateHasChanged();
     }
@@ -61,32 +68,33 @@
     {
         if (timeCardsDb != null)
         {
-              this.timeCards = this.timeCardsDb
-                                .Select(x => new TimeCardViewModel
-                                    {
-                                        Id = x.Id,
-                                        UserName = x.UserName,
-                                        ProjectName = x.ProjectName,
-                                        TaskName = x.TaskName,
-                                        Notes = x.Notes,
-                                        Status = x.Status,
-                                        TimeSpent = x.TimeSpent,
-                                        CreatedOn = x.CreatedOn,
-                                        LastModifiedOn = x.LastModifiedOn,
-                                        ClosedOn = x.ClosedOn,
-                                        IsRunning = false,
-                                        StopwatchValue = new TimeSpan(),
-                                    }).ToList();
+            this.timeCards = this.timeCardsDb
+                              .Select(x => new TimeCardViewModel
+                              {
+                                    Id = x.Id,
+                                    UserName = x.UserName,
+                                    ProjectName = x.ProjectName,
+                                    TaskName = x.TaskName,
+                                    Notes = x.Notes,
+                                    Status = x.Status,
+                                    TimeSpent = x.TimeSpent,
+                                    CreatedBy = x.CreatedBy,
+                                    CreatedOn = x.CreatedOn,
+                                    LastModifiedOn = x.LastModifiedOn,
+                                    ClosedOn = x.ClosedOn,
+                                    IsRunning = false,
+                                    StopwatchValue = new TimeSpan(),
+                              }).ToList();
         }
     }
 
-    private void Reopen(TimeCardViewModel timeCard)
+    private async Task ReopenAsync(TimeCardViewModel timeCard)
     {
         timeCard.Status = TimeCardStatus.Open;
         timeCard.LastModifiedOn = DateTime.Now;
         EditTimeCardUseCase.Execute(timeCard.Transform());
         StateHasChanged();
-        OnInitialized();
+        await OnInitializedAsync();
     }
     private void OnBack()
     {
