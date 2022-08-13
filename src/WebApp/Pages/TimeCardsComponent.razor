@@ -11,43 +11,43 @@
 
 @if (timeCards != null)
 {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Created By</th>
-                        <th>Project</th>
-                        <th>Task</th>
-                        <th>Notes</th>
-                        <th>Status</th>
-                        <th>Time Spent</th>
-                        <th>Created On</th>
-                        <th>Last Modified On</th>
-                        <th>Edit</th>
-                        <th colspan=6>Timer</th>
-                    </tr>
-                </thead>
-                <tbody>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Created By</th>
+                <th>Project</th>
+                <th>Task</th>
+                <th>Notes</th>
+                <th>Status</th>
+                <th>Time Spent</th>
+                <th>Created On</th>
+                <th>Last Modified On</th>
+                <th>Edit</th>
+                <th colspan=6>Timer</th>
+            </tr>
+        </thead>
+        <tbody>
             @foreach (var card in timeCards)
             {
-                        <tr>
-                            <td>@card.CreatedBy</td>
-                            <td>@card.ProjectName</td>
-                            <td>@card.TaskName</td>
-                            <td>@card.Notes</td>
-                            <td>@EnumHelperUseCase.GetStatusDisplayName(card.Status)</td>
-                            <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min : @card.TimeSpent.Seconds sec</td>
-                            <td>@card.CreatedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
-                            <td>@card.LastModifiedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
+                <tr>
+                    <td>@card.CreatedBy</td>
+                    <td>@card.ProjectName</td>
+                    <td>@card.TaskName</td>
+                    <td>@card.Notes</td>
+                    <td>@EnumHelperUseCase.GetStatusDisplayName(card.Status)</td>
+                    <td>@card.TimeSpent.Hours hrs : @card.TimeSpent.Minutes min : @card.TimeSpent.Seconds sec</td>
+                    <td>@card.CreatedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
+                    <td>@card.LastModifiedOn.ToString("ddd, dd MMMM yyyy - hh:mm:ss tt")</td>
                     <td><button type="button" data-toggle="tooltip" title="Edit" @onclick="@(async () => { await CacheCardStatus();  OnClickEditTimeCard(card.Id); })" class="btn btn-primary oi oi-pencil"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Start" @onclick="@(async () =>  { ChangeStatus(card, "InProgress"); OnClickUpdateTimeCard(card); await StopWatch(card); })" class="btn btn-success oi oi-media-play"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Pause" @onclick="@(() => { card.IsRunning = false; ChangeStatus(card, "OnHold");  OnClickUpdateTimeCard(card); })" class="btn btn-light oi oi-media-pause"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Resume" @onclick="@(async () =>  { ChangeStatus(card, "InProgress"); OnClickUpdateTimeCard(card); await StopWatch(card); })" class="btn btn-light oi oi-media-step-forward"></button></td>
                     <td><button type="button" data-toggle="tooltip" title="Stop" @onclick="@(() => { card.IsRunning = false; ChangeStatus(card, "Done"); AddTimeSpent(card); OnClickUpdateTimeCard(card); card.StopwatchValue = new TimeSpan(); })" class="btn btn-danger oi oi-media-stop"></button></td>
-                            <td><div>@card.StopwatchValue</div></td>
-                        </tr>
+                    <td><div>@card.StopwatchValue</div></td>
+                </tr>
             }
-                </tbody>
-            </table>
+        </tbody>
+    </table>
 }
 <br />
 <button class="btn btn-primary" @onclick="@(async () => { await CacheCardStatus();  OnClickAddTimeCard(); })">Add Time Card</button>
@@ -86,21 +86,21 @@
         {
             this.timeCards = this.timeCardsDb
                               .Select(x => new TimeCardViewModel
-                              {
-                                  Id = x.Id,
-                                  UserName = x.UserName,
-                                  ProjectName = x.ProjectName,
-                                  TaskName = x.TaskName,
-                                  Notes = x.Notes,
-                                  Status = x.Status,
-                                  TimeSpent = x.TimeSpent,
-                                  CreatedBy = x.CreatedBy,
-                                  CreatedOn = x.CreatedOn,
-                                  LastModifiedOn = x.LastModifiedOn,
-                                  ClosedOn = x.ClosedOn,
-                                  IsRunning = false,
-                                  StopwatchValue = new TimeSpan(),
-                              }).ToList();
+                                  {
+                                      Id = x.Id,
+                                      UserName = x.UserName,
+                                      ProjectName = x.ProjectName,
+                                      TaskName = x.TaskName,
+                                      Notes = x.Notes,
+                                      Status = x.Status,
+                                      TimeSpent = x.TimeSpent,
+                                      CreatedBy = x.CreatedBy,
+                                      CreatedOn = x.CreatedOn,
+                                      LastModifiedOn = x.LastModifiedOn,
+                                      ClosedOn = x.ClosedOn,
+                                      IsRunning = false,
+                                      StopwatchValue = new TimeSpan(),
+                                  }).ToList();
         }
     }
 

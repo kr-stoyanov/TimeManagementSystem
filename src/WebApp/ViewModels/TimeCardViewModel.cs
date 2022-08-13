@@ -10,8 +10,6 @@ namespace WebApp.ViewModels
 
         public string? UserName { get; set; }
 
-        [Required]
-        [MaxLength(50)]
         public string? ProjectName { get; set; }
 
         [Required]
@@ -21,6 +19,7 @@ namespace WebApp.ViewModels
         [MaxLength(2500)]
         public string? Notes { get; set; }
 
+        [Required]
         public TimeCardStatus Status { get; set; }
 
         public TimeSpan TimeSpent { get; set; }
